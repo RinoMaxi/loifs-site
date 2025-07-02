@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Professional Reliability Assessment</title>
+      <style>
+          body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+          .section { margin-bottom: 30px; }
+          .services, .pricing { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
+          .service, .plan { border: 1px solid #ccc; padding: 15px; width: 300px; text-align: left; }
+          .plan button { margin-top: 10px; }
+          footer { text-align: center; font-size: 0.9em; }
+      </style>
+      <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID_HERE" async onload="initPayPalButtons()"></script>
+  </head>
+  <body>
+      <div class="section">
+          <h1>Professional Reliability Assessment</h1>
+          <p>Measure, scale, and verify the reliability of your systems, processes, and components with our comprehensive testing services</p>
+      </div>
+
+      <div class="section">
+          <h2>Our Services</h2>
+          <div class="services">
+              <div class="service">
+                  <h3>Performance Testing</h3>
+                  <p>Comprehensive analysis of system performance under various load conditions and stress scenarios</p>
+              </div>
+              <div class="service">
+                  <h3>Reliability Auditing</h3>
+                  <p>Detailed examination of your processes and systems to identify potential failure points</p>
+              </div>
+              <div class="service">
+                  <h3>Scalability Analysis</h3>
+                  <p>Evaluate how well your systems handle growth and increased demand over time</p>
+              </div>
+              <div class="service">
+                  <h3>Risk Assessment</h3>
+                  <p>Identify and quantify potential risks to help you make informed decisions</p>
+              </div>
+              <div class="service">
+                  <h3>Continuous Monitoring</h3>
+                  <p>Ongoing surveillance and reporting to ensure sustained reliability standards</p>
+              </div>
+              <div class="service">
+                  <h3>Compliance Verification</h3>
+                  <p>Ensure your systems meet industry standards and regulatory requirements</p>
+              </div>
+          </div>
+      </div>
+
+      <div class="section">
+          <h2>Pricing Plans</h2>
+          <div class="pricing">
+              <div class="plan">
+                  <h3>Basic Assessment</h3>
+                  <p><strong>$299</strong></p>
+                  <ul>
+                      <li>Initial reliability evaluation</li>
+                      <li>Basic performance testing</li>
+                      <li>Summary report</li>
+                      <li>Email support</li>
+                  </ul>
+                  <div id="paypal-basic"></div>
+              </div>
+              <div class="plan">
+                  <h3>Professional Assessment</h3>
+                  <p><strong>$599</strong></p>
+                  <ul>
+                      <li>Comprehensive reliability audit</li>
+                      <li>Advanced performance testing</li>
+                      <li>Scalability analysis</li>
+                      <li>Detailed recommendations</li>
+                      <li>Phone & email support</li>
+                  </ul>
+                  <div id="paypal-pro"></div>
+              </div>
+              <div class="plan">
+                  <h3>Enterprise Assessment</h3>
+                  <p><strong>$1,299</strong></p>
+                  <ul>
+                      <li>Full system evaluation</li>
+                      <li>Risk assessment & mitigation</li>
+                      <li>Continuous monitoring setup</li>
+                      <li>Custom compliance checks</li>
+                      <li>Dedicated support manager</li>
+                  </ul>
+                  <div id="paypal-enterprise"></div>
+              </div>
+          </div>
+      </div>
+
+      <footer class="section">
+          <p>© 2025 Professional Reliability Assessment. All rights reserved.</p>
+          <p>Ready to get started? Contact us today!</p>
+          <p>Email: [email protected] | Phone: +1 (555) 123-4567</p>
+      </footer>
+
+      <script>
+          function initPayPalButtons() {
+              paypal.Buttons({
+                  createOrder: function(data, actions) {
+                      return actions.order.create({
+                          purchase_units: [{
+                              amount: {
+                                  value: '299.00',
+                                  currency: 'USD'
+                              }
+                          }]
+                      });
+                  },
+                  onApprove: function(data, actions) {
+                      return actions.order.capture().then(function(details) {
+                          alert('Payment completed by ' + details.payer.name.given_name + '!');
+                      });
+                  }
+              }).render('#paypal-basic');
+
+              paypal.Buttons({
+                  createOrder: function(data, actions) {
+                      return actions.order.create({
+                          purchase_units: [{
+                              amount: {
+                                  value: '599.00',
+                                  currency: 'USD'
+                              }
+                          }]
+                      });
+                  },
+                  onApprove: function(data, actions) {
+                      return actions.order.capture().then(function(details) {
+                          alert('Payment completed by ' + details.payer.name.given_name + '!');
+                      });
+                  }
+              }).render('#paypal-pro');
+
+              paypal.Buttons({
+                  createOrder: function(data, actions) {
+                      return actions.order.create({
+                          purchase_units: [{
+                              amount: {
+                                  value: '1299.00',
+                                  currency: 'USD'
+                              }
+                          }]
+                      });
+                  },
+                  onApprove: function(data, actions) {
+                      return actions.order.capture().then(function(details) {
+                          alert('Payment completed by ' + details.payer.name.given_name + '!');
+                      });
+                  }
+              }).render('#paypal-enterprise');
+          }
+
+          window.onload = function() {
+              if (typeof paypal === 'undefined') {
+                  console.error('PayPal SDK failed to load. Check your Client ID.');
+              }
+          };
+      </script>
+  </body>
+  </html>
