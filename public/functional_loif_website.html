@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOIF - Professional Reliability Assessment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+<div style="text-align: center; margin-top: 30px;">
+  <button onclick="generateInsight()" style="padding: 10px 20px; font-size: 16px;">Generate Insight</button>
+  <div id="insightOutput" style="margin-top: 20px; font-weight: bold; font-size: 18px;"></div>
+</div>
+<section id="loifs-score" style="padding: 40px; background: #f9f9f9;">
+  <h2 style="text-align: center;"> LOIFS Insight Scoring</h2>
+  <p style="text-align: center;">Quantify your system's reliability and confidence using LOIFS logic</p>
+
+  <div style="max-width: 600px; margin: auto;">
+    <label for="stability">System Stability (0–100):</label>
+    <input type="range" id="stability" min="0" max="100" value="50" oninput="updateScore()">
+    <span id="stabilityValue">50</span>%
+
+    <br><br>
+
+    <label for="confidence">User Confidence (0–100):</label>
+    <input type="range" id="confidence" min="0" max="100" value="50" oninput="updateScore()">
+    <span id="confidenceValue">50</span>%
+
+    <br><br>
+
+    <h3>Composite Score: <span id="scoreOutput">50%</span></h3>
+  </div>
+</section>
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 150px 0 100px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        .cta-button {
+            background: #ff6b6b;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            animation: fadeInUp 1s ease 0.4s both;
+        }
+
+        .cta-button:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+        }
+
+        /* Services Section */
+        .services {
+<section id="loifs-score" style="padding: 40px; background: #f9f9f9;">
+  <h2 style="text-align: center;"> LOIFS Insight Scoring</h2>
+  <p style="text-align: center;">Quantify your system's reliability and confidence using LOIFS logic</p>
+
+  <div style="max-width: 600px; margin: auto;">
+    <label for="stability">System Stability (0–100):</label>
+    <input type="range" id="stability" min="0" max="100" value="50" oninput="updateScore()">
+    <span id="stabilityValue">50</span>%
+
+    <br><br>
+
+    <label for="confidence">User Confidence (0–100):</label>
+    <input type="range" id="confidence" min="0" max="100" value="50" oninput="updateScore()">
+    <span id="confidenceValue">50</span>%
+
+    <br><br>
+
+    <h3>Composite Score: <span id="scoreOutput">50%</span></h3>
+  </div>
+</section>
+            background: white;
+            padding: 100px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #333;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .service-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .service-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .service-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .service-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Pricing Section */
+        .pricing {
+            background: #f8f9fa;
+            padding: 100px 0;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .pricing-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pricing-card.featured {
+            transform: scale(1.05);
+            border: 3px solid #667eea;
+        }
+
+        .pricing-card.featured::before {
+            content: 'Most Popular';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #667eea;
+            color: white;
+            padding: 0.5rem;
+            font-weight: bold;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .pricing-card.featured:hover {
+            transform: scale(1.05) translateY(-5px);
+        }
+
+        .price {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #667eea;
+            margin: 1rem 0;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin: 2rem 0;
+        }
+
+        .pricing-features li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .pricing-features li:last-child {
+            border-bottom: none;
+        }
+
+        /* Contact Section */
+        .contact {
+            background: white;
+            padding: 100px 0;
+        }
+
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Status Messages */
+        .status-message {
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .services-grid,
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing-card.featured {
+                transform: none;
+            }
+        }
+    </style>
+</head><script>
+function updateScore() {
+  const stability = parseInt(document.getElementById('stability').value);
+  const confidence = parseInt(document.getElementById('confidence').value);
+
+  // Update live values
+  document.getElementById('stabilityValue').textContent = stability;
+  document.getElementById('confidenceValue').textContent = confidence;
+
+  // Weighted scoring logic (60% stability, 40% confidence)
+  const score = Math.round((stability * 0.6 + confidence * 0.4));
+  document.getElementById('scoreOutput').textContent = score + '%';
+}
+</script>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <div class="logo">LOIF</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <h1>Professional Reliability Assessment</h1>
+            <p>Measure, scale, and verify the reliability of your systems, processes, and components with our comprehensive testing services</p>
+            <button class="cta-button" onclick="scrollToSection('contact')">Get Started Today</button>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <div class="container">
+            <h2 class="section-title">Our Services</h2>
+            <div class="services-grid">
+                <div class="service-card" onclick="openServiceModal('performance')">
+                    <div class="service-icon">⚡</div>
+                    <h3>Performance Testing</h3>
+                    <p>Comprehensive analysis of system performance under various load conditions and stress scenarios</p>
+                </div>
+                <div class="service-card" onclick="openServiceModal('auditing')">
+                    <div class="service-icon">🔍</div>
+                    <h3>Reliability Auditing</h3>
+                    <p>Detailed examination of your processes and systems to identify potential failure points</p>
+                </div>
+                <div class="service-card" onclick="openServiceModal('scalability')">
+                    <div class="service-icon">📈</div>
+                    <h3>Scalability Analysis</h3>
+                    <p>Evaluate how well your systems handle growth and increased demand over time</p>
+                </div>
+                <div class="service-card" onclick="openServiceModal('risk')">
+                    <div class="service-icon">⚠️</div>
+                    <h3>Risk Assessment</h3>
+                    <p>Identify and quantify potential risks to help you make informed decisions</p>
+                </div>
+                <div class="service-card" onclick="openServiceModal('monitoring')">
+                    <div class="service-icon">📊</div>
+                    <h3>Continuous Monitoring</h3>
+                    <p>Ongoing surveillance and reporting to ensure sustained reliability standards</p>
+                </div>
+                <div class="service-card" onclick="openServiceModal('compliance')">
+                    <div class="service-icon">✅</div>
+                    <h3>Compliance Verification</h3>
+                    <p>Ensure your systems meet industry standards and regulatory requirements</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing">
+        <div class="container">
+            <h2 class="section-title">Pricing Plans</h2>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Basic Assessment</h3>
+                    <div class="price">$299</div>
+                    <ul class="pricing-features">
+                        <li>Initial reliability evaluation</li>
+                        <li>Basic performance testing</li>
+                        <li>Summary report</li>
+                        <li>Email support</li>
+                    </ul>
+                    <button class="cta-button" onclick="selectPlan('basic')">Choose Plan</button>
+                </div>
+                <div class="pricing-card featured">
+                    <h3>Professional Assessment</h3>
+                    <div class="price">$599</div>
+                    <ul class="pricing-features">
+                        <li>Comprehensive reliability audit</li>
+                        <li>Advanced performance testing</li>
+                        <li>Scalability analysis</li>
+                        <li>Detailed recommendations</li>
+                        <li>Phone & email support</li>
+                    </ul>
+                    <button class="cta-button" onclick="selectPlan('professional')">Choose Plan</button>
+                </div>
+                <div class="pricing-card">
+                    <h3>Enterprise Assessment</h3>
+                    <div class="price">$1,299</div>
+                    <ul class="pricing-features">
+                        <li>Full system evaluation</li>
+                        <li>Risk assessment & mitigation</li>
+                        <li>Continuous monitoring setup</li>
+                        <li>Custom compliance checks</li>
+                        <li>Dedicated support manager</li>
+                    </ul>
+                    <button class="cta-button" onclick="selectPlan('enterprise')">Choose Plan</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            <form class="contact-form" id="contactForm">
+                <div class="form-group">
+                    <label for="name">Full Name *</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="company">Company</label>
+                    <input type="text" id="company" name="company">
+                </div>
+                <div class="form-group">
+                    <label for="service">Service Interest</label>
+                    <select id="service" name="service">
+                        <option value="">Select a service</option>
+                        <option value="performance">Performance Testing</option>
+                        <option value="auditing">Reliability Auditing</option>
+                        <option value="scalability">Scalability Analysis</option>
+                        <option value="risk">Risk Assessment</option>
+                        <option value="monitoring">Continuous Monitoring</option>
+                        <option value="compliance">Compliance Verification</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message *</label>
+                    <textarea id="message" name="message" required placeholder="Tell us about your reliability assessment needs..."></textarea>
+                </div>
+                <button type="submit" class="cta-button">Send Message</button>
+                <div id="formStatus"></div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Service Detail Modal -->
+    <div id="serviceModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('serviceModal')">&times;</span>
+            <div id="serviceModalContent"></div>
+        </div>
+    </div>
+
+    <!-- Plan Selection Modal -->
+    <div id="planModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('planModal')">&times;</span>
+            <div id="planModalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // Smooth scrolling
+        function scrollToSection(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+
+        // Service details data
+        const serviceDetails = {
+            performance: {
+                title: "Performance Testing",
+                icon: "⚡",
+                description: "Our comprehensive performance testing service evaluates your systems under various conditions to ensure optimal performance.",
+                features: [
+                    "Load testing up to 10,000 concurrent users",
+                    "Stress testing to identify breaking points",
+                    "Performance bottleneck identification",
+                    "Response time analysis",
+                    "Resource utilization monitoring",
+                    "Detailed performance reports"
+                ],
+                duration: "2-4 weeks",
+                deliverables: "Performance test report, recommendations, optimization plan"
+            },
+            auditing: {
+                title: "Reliability Auditing",
+                icon: "🔍",
+                description: "Deep dive analysis of your systems and processes to identify potential reliability issues before they become problems.",
+                features: [
+                    "System architecture review",
+                    "Code quality assessment",
+                    "Infrastructure analysis",
+                    "Process evaluation",
+                    "Security vulnerability scan",
+                    "Best practices recommendations"
+                ],
+                duration: "3-5 weeks",
+                deliverables: "Comprehensive audit report, risk matrix, improvement roadmap"
+            },
+            scalability: {
+                title: "Scalability Analysis",
+                icon: "📈",
+                description: "Evaluate your system's ability to handle growth and increased demand while maintaining performance.",
+                features: [
+                    "Current capacity assessment",
+                    "Growth projection modeling",
+                    "Bottleneck identification",
+                    "Architecture scalability review",
+                    "Cost-benefit analysis",
+                    "Scaling strategy development"
+                ],
+                duration: "2-3 weeks",
+                deliverables: "Scalability report, capacity planning guide, scaling roadmap"
+            },
+            risk: {
+                title: "Risk Assessment",
+                icon: "⚠️",
+                description: "Comprehensive risk analysis to identify, quantify, and prioritize potential threats to your system reliability.",
+                features: [
+                    "Risk identification and cataloging",
+                    "Probability and impact analysis",
+                    "Risk prioritization matrix",
+                    "Mitigation strategy development",
+                    "Business continuity planning",
+                    "Regular risk monitoring setup"
+                ],
+                duration: "3-4 weeks",
+                deliverables: "Risk assessment report, mitigation plans, monitoring framework"
+            },
+            monitoring: {
+                title: "Continuous Monitoring",
+                icon: "📊",
+                description: "Ongoing surveillance and reporting to ensure your systems maintain their reliability standards over time.",
+                features: [
+                    "24/7 system monitoring",
+                    "Real-time alerting",
+                    "Performance dashboards",
+                    "Trend analysis",
+                    "Automated reporting",
+                    "Proactive issue detection"
+                ],
+                duration: "Ongoing service",
+                deliverables: "Monitoring dashboard, regular reports, alert configurations"
+            },
+            compliance: {
+                title: "Compliance Verification",
+                icon: "✅",
+                description: "Ensure your systems meet industry standards and regulatory requirements for reliability and performance.",
+                features: [
+                    "Standards compliance checking",
+                    "Regulatory requirement mapping",
+                    "Documentation review",
+                    "Gap analysis",
+                    "Certification preparation",
+                    "Ongoing compliance monitoring"
+                ],
+                duration: "4-6 weeks",
+                deliverables: "Compliance report, gap analysis, certification roadmap"
+            }
+        };
+
+        // Plan details data
+        const planDetails = {
+            basic: {
+                name: "Basic Assessment",
+                price: "$299",
+                description: "Perfect for small businesses and startups looking to understand their system reliability baseline.",
+                included: [
+                    "Initial reliability evaluation",
+                    "Basic performance testing",
+                    "Summary report with key findings",
+                    "Email support for 30 days",
+                    "Basic recommendations"
+                ],
+                timeline: "1-2 weeks",
+                support: "Email support"
+            },
+            professional: {
+                name: "Professional Assessment",
+                price: "$599",
+                description: "Comprehensive solution for growing businesses that need detailed analysis and actionable insights.",
+                included: [
+                    "Comprehensive reliability audit",
+                    "Advanced performance testing",
+                    "Scalability analysis",
+                    "Detailed recommendations with implementation guide",
+                    "Phone & email support for 60 days",
+                    "Follow-up consultation session"
+                ],
+                timeline: "2-3 weeks",
+                support: "Phone & email support"
+            },
+            enterprise: {
+                name: "Enterprise Assessment",
+                price: "$1,299",
+                description: "Complete enterprise-grade solution with ongoing support and monitoring capabilities.",
+                included: [
+                    "Full system evaluation",
+                    "Risk assessment & mitigation planning",
+                    "Continuous monitoring setup",
+                    "Custom compliance checks",
+                    "Dedicated support manager",
+                    "Quarterly review sessions",
+                    "Priority support access"
+                ],
+                timeline: "3-4 weeks",
+                support: "Dedicated support manager"
+            }
+        };
+
+        // Open service modal
+        function openServiceModal(serviceType) {
+            const service = serviceDetails[serviceType];
+            const modalContent = document.getElementById('serviceModalContent');
+            
+            modalContent.innerHTML = `
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">${service.icon}</div>
+                    <h2>${service.title}</h2>
+                    <p style="font-size: 1.1rem; color: #666; margin-top: 1rem;">${service.description}</p>
+                </div>
+                
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem;">What's Included:</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        ${service.features.map(feature => `
+                            <li style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">
+                                <span style="color: #667eea; margin-right: 0.5rem;">✓</span>
+                                ${feature}
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                    <div>
+                        <h4 style="color: #667eea;">Timeline</h4>
+                        <p>${service.duration}</p>
+                    </div>
+                    <div>
+                        <h4 style="color: #667eea;">Deliverables</h4>
+                        <p>${service.deliverables}</p>
+                    </div>
+                </div>
+                
+                <div style="text-align: center;">
+                    <button class="cta-button" onclick="scrollToSection('contact'); closeModal('serviceModal');">
+                        Request This Service
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('serviceModal').style.display = 'block';
+        }
+
+        // Select plan
+        function selectPlan(planType) {
+            const plan = planDetails[planType];
+            const modalContent = document.getElementById('planModalContent');
+            
+            modalContent.innerHTML = `
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <h2>${plan.name}</h2>
+                    <div style="font-size: 3rem; color: #667eea; font-weight: bold; margin: 1rem 0;">${plan.price}</div>
+                    <p style="font-size: 1.1rem; color: #666;">${plan.description}</p>
+                </div>
+                
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem;">What's Included:</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        ${plan.included.map(item => `
+                            <li style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">
+                                <span style="color: #667eea; margin-right: 0.5rem;">✓</span>
+                                ${item}
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                    <div>
+                        <h4 style="color: #667eea;">Timeline</h4>
+                        <p>${plan.timeline}</p>
+                    </div>
+                    <div>
+                        <h4 style="color: #667eea;">Support</h4>
+                        <p>${plan.support}</p>
+                    </div>
+                </div>
+                
+                <div style="text-align: center;">
+                    <button class="cta-button" onclick="startPlanProcess('${planType}')">
+                        Get Started with ${plan.name}
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('planModal').style.display = 'block';
+        }
+
+        // Start plan process
+        function startPlanProcess(planType) {
+            closeModal('planModal');
+            scrollToSection('contact');
+            
+            // Pre-fill the form with plan information
+            const serviceSelect = document.getElementById('service');
+            const messageField = document.getElementById('message');
+            
+            // Set the service based on plan type
+            if (planType === 'basic') {
+                serviceSelect.value = 'performance';
+            } else if (planType === 'professional') {
+                serviceSelect.value = 'auditing';
+            } else {
+                serviceSelect.value = 'risk';
+            }
+            
+            messageField.value = `I'm interested in the ${planDetails[planType].name} (${planDetails[planType].price}). Please contact me to discuss my requirements and schedule an assessment.`;
+        }
+
+        // Close modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const serviceModal = document.getElementById('serviceModal');
+            const planModal = document.getElementById('planModal');
+            
+            if (event.target === serviceModal) {
+                closeModal('serviceModal');
+            }
+            if (event.target === planModal) {
+                closeModal('planModal');
+            }
+        }
+
+        // Form submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const statusDiv = document.getElementById('formStatus');
+            
+            // Show loading state
+            statusDiv.innerHTML = '<div style="text-align: center; color: #667eea;">Sending your message...</div>';
+            
+            // Simulate form submission (replace with actual form handling)
+            setTimeout(() => {
+                statusDiv.innerHTML = `
+                    <div class="status-message status-success">
+                        Thank you for your interest! We'll contact you within 24 hours to discuss your reliability assessment needs.
+                    </div>
+                `;
+                
+                // Reset form
+                this.reset();
+                
+                // Clear status after 5 seconds
+                setTimeout(() => {
+                    statusDiv.innerHTML = '';
+                }, 5000);
+            }, 1500);
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add scroll effect to header
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(255, 255, 255, 0.98)';
+            } else {
+                header.style.background = 'rgba(255, 255, 255, 0.95)';
+            }
+        });
+    </script>
+function generateInsight() {
+  const stability = parseInt(document.getElementById('stability').value);
+  const confidence = parseInt(document.getElementById('confidence').value);
+  const score = Math.round((stability * 0.6 + confidence * 0.4));
+
+  let insight = '';
+
+  if (score >= 80) {
+    insight = '🟢 High Reliability & Confidence – System is robust and trusted.';
+  } else if (score >= 60) {
+    insight = '🟡 Moderate Reliability – System is functional but needs review.';
+  } else if (score >= 40) {
+    insight = '🟠 Low Reliability – Caution advised, consider improvements.';
+  } else {
+    insight = '🔴 Critical Risk – System is unstable or lacks user trust.';
+  }
+
+  document.getElementById('insightOutput').textContent = insight;
+}
+</script>
+  function updateScore() {
+    const stability = parseInt(document.getElementById('stability').value);
+    const confidence = parseInt(document.getElementById('confidence').value);
+
+    document.getElementById('stabilityValue').textContent = stability;
+    document.getElementById('confidenceValue').textContent = confidence;
+
+    const score = Math.round((stability * 0.6 + confidence * 0.4));
+    document.getElementById('scoreOutput').textContent = score + '%';
+  }
+</script>
+</body>
+</html>
